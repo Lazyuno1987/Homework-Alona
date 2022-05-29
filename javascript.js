@@ -40,49 +40,38 @@ const books = [
 	},
 ];
 
-
-
-
-
-
-
-
-
-
-
+localStorage.setItem("books", JSON.stringify( books));
 
 
 
 
 const root = document.querySelector("#root");
 const leftDiv = document.createElement("div");
-const rightDiv = document.createElement("div");
-root.append(leftDiv, rightDiv);
 leftDiv.classList.add("left-div");
+const rightDiv = document.createElement("div");
 rightDiv.classList.add("right-div");
-const headEl = document.createElement("h1");
-headEl.textContent = "Books list";
+root.append(leftDiv, rightDiv);
+
+
+const rightSide = document.querySelector(".right-div")
+const headerEl = document.createElement("h1");
+headerEl.textContent = "Books list";
 const listRef = document.createElement("ul");
 listRef.classList.add("booksList")
 const btnEl = document.createElement("button");
 btnEl.classList.add("btn-add")
 btnEl.textContent = "Add new book";
-leftDiv.append(headEl, listRef, btnEl);
+btnEl.addEventListener("click", addBook)
 
-const delEl = (event) => {
-    console.log("Delete");
-}
-
-const editEl = (event) => {
-    const book = books.find(book => book.id === event.target.parentNode.id )
-console.log(book) 
-}
+leftDiv.append(headerEl, listRef, btnEl);
 
 function renderList() {
+    const books = JSON.parse(localStorage.getItem("books"));
     const listMurkup = books.map(book => {
         const liEl = `<li id = ${book.id} class="item"><p class = "text-item">${book.title}</p><button class = "edit-btn">Edit</button><button class ="del-btn">Delete</button></li>`;
         return liEl;
-    }).join('');
+        }).join('');
+    
      document.querySelector(".booksList").insertAdjacentHTML("beforeend", listMurkup);
     const p = document.querySelectorAll(".text-item");
     p.forEach(el => el.addEventListener("click", renderPrewiew))
@@ -90,17 +79,111 @@ function renderList() {
      document.querySelectorAll(".del-btn").forEach(el =>el.addEventListener("click", delEl))
 }
 renderList();
-
-
+  
 function renderPrewiew(event) {
-   
+    console.log(event.target.textContent)
+    const books = JSON.parse(localStorage.getItem("books"));
     const book = books.find(book => book.title === event.target.textContent)
     rightDiv.innerHTML = "";
     rightDiv.insertAdjacentHTML("beforeend", renderPrewiewMurkUp(book))
     
 }
 
-function renderPrewiewMurkUp(books) {
-    return `<div class = "book-discr-container"><h2 class = "disk-title">${books.title}</h2><p class = "autor-name">${books.author}</p><img src ="${books.img}" alt = "" class = "book-img"/><p class ="book-discr" >${books.plot}</p></div>`
+function renderPrewiewMurkUp(book) {
+    console.log(book)
+    return `<div class = "book-discr-container"><h2 class = "disk-title">${book.title}</h2><p class = "autor-name">${book.author}</p><img src ="${book.img}" alt = "" class = "book-img"/><p class ="book-discr" >${book.plot}</p></div>`
     
 }
+
+function editEl(event) {
+    const books = JSON.parse(localStorage.getItem("books"));
+    const book = books.find(book => book.id === event.target.parentNode.id )
+}
+
+
+function delEl(event) {
+    const books = JSON.parse(localStorage.getItem("books"));
+    const book = books.find(book => book.id === event.target.parentNode.id);
+    const newBook = books.filter(el => el.id !== book.id);
+    localStorage.setItem('books', JSON.stringify(newBook));
+    const bookTitle = document.querySelector(".disk-title");
+    if (bookTitle) {
+   
+        if (book.title === bookTitle.textContent) {
+            rightDiv.innerHTML = "";
+    
+        }
+    }
+    listRef.innerHTML = "";
+    renderList();
+}
+
+
+function bookFormMurkUp() {
+    return ` <form class ="form-el" action="">
+      <label>Book Title
+          <input name = "title" class = "input1 input" type="text" >
+      </label>
+      <label>Book Author
+       <input name = "author" class = "input2 input" type="text">
+        </label>
+      <label>Book Img
+       <input name = "img" class = "input3 input" type="text">
+        </label>
+      <label>Book Description
+       <input name = "plot" class = "input4 input" type="text">
+        </label>
+        <button class = "save-btn" type="button">Save</button>
+    </form>`
+}
+
+function addBook() {
+    const newbook = {
+        id: `${Date.now()}`,
+        title: "",
+        author: "",
+        img: "",
+        plot: "",
+       }
+    rightDiv.innerHTML = bookFormMurkUp();
+    fillObject(newbook);
+    const save = document.querySelector(".save-btn");
+    save.addEventListener("click", saveBook);
+    function saveBook() {
+        console.log(Object.values(newbook))
+        if (Object.values(newbook).some(el => el === "")) {
+            alert("Fill all inputs");
+            return;
+        }
+    
+        const books = JSON.parse(localStorage.getItem("books"));
+        console.log(books)
+        books.push(newbook);
+        localStorage.setItem('books', JSON.stringify(books));
+       
+        rightDiv.innerHTML = "";
+        rightDiv.insertAdjacentHTML("beforeend", renderPrewiewMurkUp(newbook));
+        listRef.innerHTML = "";
+
+        renderList();
+     
+    }
+}
+
+
+function fillObject(book) {
+     console.log( book)
+        //console.log( book[el.target.name])
+    const input = document.querySelectorAll(".input");
+   input.forEach(el => el.addEventListener("change", mvoh));
+        function mvoh(el) {
+        console.log(el)
+        book[el.target.name] = el.target.value;
+    }
+
+//     form.addEventListener("change", )
+}
+
+   
+
+

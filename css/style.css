@@ -14,50 +14,76 @@ body {
 .left-div {
     background-color: aqua;
     width: 40%;
+    padding-left: 20px;
 
 }
 
 .right-div {
-    background-color: blue;
+    background-color:coral;
     width: 60%;
+    height: 100vh;
 
 }
 
 .edit-btn {
     margin-left: auto;
     border-radius: 5px;
-    border-color: blue;
     margin-right: 10px;
+    border-color: inherit;
     background-color: tomato;
 
 }
 
 .del-btn {
     border-radius: 5px;
-    border-color: blue;
+    border-color: inherit;
     background-color: tomato;
 
 }
 
 .btn-add {
     border-radius: 5px;
-    border-color: blue;
+    border-color: inherit;
     margin-left: 20px;
     background-color: tomato;
 }
 
 .booksList {
     list-style: none;
+    padding: 0;
 }
 
 .item {
     display: flex;
-    ;
+  
     padding: 5px;
-    ;
+    
     align-items: center;
 }
 
 .item:non(:last-child) {
     margin-bottom: 10px;
+}
+.book-discr-container{
+    padding-left: 25px;
+    height: inherit;
+}
+
+.form-el{
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input{
+    margin: 10px;
+    
+}
+.save-btn{
+    border-radius: 5px;
+        border-color: inherit;
+        background-color: aqua;
+       max-width: 100px;
+   
+
 }
