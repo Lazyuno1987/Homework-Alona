@@ -5,12 +5,12 @@ const books = [
 		title: `Apple. Эволюция компьютера`,
 		author: `Владимир Невзоров`,
 		img: `https://bukva.ua/img/products/449/449532_200.jpg`,
-		plot: `Богато иллюстрированный хронологический справочник по истории компьютеров, в котором увлекательно 
-    и в структурированном виде изложена информация о создании и развитии техники Apple на фоне истории 
+		plot: `Богато иллюстрированный хронологический справочник по истории компьютеров, в котором увлекательно
+    и в структурированном виде изложена информация о создании и развитии техники Apple на фоне истории
     персональных компьютеров в целом.
-    В книге даны описания десятков наиболее значимых моделей устройств как Apple, так и других производителей, 
+    В книге даны описания десятков наиболее значимых моделей устройств как Apple, так и других производителей,
     сопровождающиеся большим количеством оригинальных студийных фотографий.
-    Книга предназначена для широкого круга читателей, интересующихся историей электроники. 
+    Книга предназначена для широкого круга читателей, интересующихся историей электроники.
     Она также может послужить источником вдохновения для дизайнеров, маркетологов и предпринимателей.`,
 	},
 	{
@@ -18,12 +18,12 @@ const books = [
 		title: `Как объяснить ребенку информатику`,
 		author: `Кэрол Вордерман`,
 		img: `https://bukva.ua/img/products/480/480030_200.jpg`,
-		plot: `Иллюстрированная энциклопедия в формате инфографики о технических, социальных и культурных аспектах 
-    в информатике. Пошагово объясняет, как детям максимально эффективно использовать компьютеры и интернет-сервисы, 
-    оставаясь в безопасности. 
-    Книга рассказывает обо всем: от хранения данных до жизни в интернет-пространстве, 
-    от программирования до компьютерных атак. О том, как компьютеры функционируют, о современном программном 
-    обеспечении, устройстве Интернета и цифровом этикете. Все концепты - от хакера до биткоина - 
+		plot: `Иллюстрированная энциклопедия в формате инфографики о технических, социальных и культурных аспектах
+    в информатике. Пошагово объясняет, как детям максимально эффективно использовать компьютеры и интернет-сервисы,
+    оставаясь в безопасности.
+    Книга рассказывает обо всем: от хранения данных до жизни в интернет-пространстве,
+    от программирования до компьютерных атак. О том, как компьютеры функционируют, о современном программном
+    обеспечении, устройстве Интернета и цифровом этикете. Все концепты - от хакера до биткоина -
     объясняются наглядно с помощью иллюстраций и схем.`,
 	},
 	{
@@ -31,11 +31,11 @@ const books = [
 		title: `Путь скрам-мастера. #ScrumMasterWay`,
 		author: `Зузана Шохова`,
 		img: `https://bukva.ua/img/products/480/480090_200.jpg`,
-		plot: `Эта книга поможет вам стать выдающимся скрам-мастером и добиться отличных результатов с вашей командой. 
-    Она иллюстрированная и легкая для восприятия - вы сможете прочитать ее за выходные, а пользоваться полученными 
+		plot: `Эта книга поможет вам стать выдающимся скрам-мастером и добиться отличных результатов с вашей командой.
+    Она иллюстрированная и легкая для восприятия - вы сможете прочитать ее за выходные, а пользоваться полученными
     знаниями будете в течение всей карьеры.
-    Основываясь на 15-летнем опыте, Зузана Шохова рассказывает, какие роли и обязанности есть у скрам-мастера, 
-    как ему решать повседневные задачи, какие компетенции нужны, чтобы стать выдающимся скрам-мастером, 
+    Основываясь на 15-летнем опыте, Зузана Шохова рассказывает, какие роли и обязанности есть у скрам-мастера,
+    как ему решать повседневные задачи, какие компетенции нужны, чтобы стать выдающимся скрам-мастером,
     какими инструментами ему нужно пользоваться.`,
 	},
 ];
@@ -96,8 +96,29 @@ function renderPrewiewMurkUp(book) {
 }
 
 function editEl(event) {
+      rightDiv.innerHTML = "";
     const books = JSON.parse(localStorage.getItem("books"));
-    const book = books.find(book => book.id === event.target.parentNode.id )
+     const book = books.find(book => book.id === event.target.parentNode.id);
+     rightDiv.insertAdjacentHTML("beforeend", bookFormMurkUp(book));
+     
+     fillObject(book);
+       const save = document.querySelector(".save-btn");
+     save.addEventListener("click", saveEditBook);
+     function saveEditBook() {
+          const bookIndex = books.findIndex(
+               (el) => el.id === event.target.parentNode.id
+          );
+          books.splice(bookIndex, 1, book);
+          localStorage.setItem("books", JSON.stringify(books))
+          console.log(book);
+          listRef.innerHTML = "";
+          rightDiv.innerHTML = "";
+          setTimeout(() => {
+               alert("Books succsessfully edited!"), 500
+          })
+    renderList();
+     };
+     
 }
 
 
@@ -114,24 +135,27 @@ function delEl(event) {
     
         }
     }
-    listRef.innerHTML = "";
+     listRef.innerHTML = "";
+     setTimeout(() => {
+               alert("Books succsessfully deleted!"), 500
+          })
     renderList();
 }
 
 
-function bookFormMurkUp() {
+function bookFormMurkUp({title,author,img,plot}) {
     return ` <form class ="form-el" action="">
       <label>Book Title
-          <input name = "title" class = "input1 input" type="text" >
+          <input value="${title}" name = "title" class = "input1 input" type="text" >
       </label>
       <label>Book Author
-       <input name = "author" class = "input2 input" type="text">
+       <input value="${author}" name = "author" class = "input2 input" type="text">
         </label>
       <label>Book Img
-       <input name = "img" class = "input3 input" type="text">
+       <input value="${img}" name = "img" class = "input3 input" type="text">
         </label>
       <label>Book Description
-       <input name = "plot" class = "input4 input" type="text">
+       <input value="${plot}" name = "plot" class = "input4 input" type="text">
         </label>
         <button class = "save-btn" type="button">Save</button>
     </form>`
@@ -145,7 +169,7 @@ function addBook() {
         img: "",
         plot: "",
        }
-    rightDiv.innerHTML = bookFormMurkUp();
+    rightDiv.innerHTML = bookFormMurkUp(newbook);
     fillObject(newbook);
     const save = document.querySelector(".save-btn");
     save.addEventListener("click", saveBook);
@@ -180,10 +204,85 @@ function fillObject(book) {
         console.log(el)
         book[el.target.name] = el.target.value;
     }
-
-//     form.addEventListener("change", )
+//=================================================================
+     //============================================================
+//    form.addEventListener("change", )
 }
 
-   
+// const formEl = document.querySelector(".form");
+
+// const buttonEl = document.querySelector("button");
+// buttonEl.addEventListener("click", onFormSubmit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let delay;
+
+// function onFormSubmit(event) {
+//     event.preventDefault();
+//     // createPromise()
+//     let Fdelay = Number(formEl.elements.delay.value);
+//     let step = Number(formEl.elements.step.value);
+//     let amount = Number(formEl.elements.amount.value);
+//     for (let i = 0; i < amount; i += 1) {
+//         createPromise(i, Fdelay)
+//             .then(({ position, delay }) => {
+//                 console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+//             })
+//             .catch(({ position, delay }) => {
+//                 console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+//             });
+//        Fdelay += step;
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function createPromise(position, delay) {
+//     console.log(position);
+//     console.log(delay)
+//    return new Promise((resolve, reject) => {
+//         setTimeout(() => {
+//             const shouldResolve = Math.random() > 0.3;
+//             if (shouldResolve) {
+//                 resolve({ position, delay });
+               
+//             } else {
+//                 reject({ position, delay });
+//             }
+//         }, delay);
+//     });
+// }
+            
+//        fetch('https://jsonplaceholder.typicode.com/todos/1?fields=id,title,')
+//   .then(response => response.json())
+//   .then(data => console.log(data))
 
 
